@@ -1,0 +1,31 @@
+name: Core-Lite Posture Smoke Test
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - tools/verify_core_lite_workflows.py
+      - .github/workflows/core-lite-posture-smoke-test.yml
+
+permissions:
+  contents: read
+
+jobs:
+  core-lite-posture-smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout demo sandbox
+        uses: actions/checkout@v4
+
+      - name: Verify core-lite workflow posture
+        run: |
+          python tools/verify_core_lite_workflows.py
+
+      - name: Upload core-lite posture artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-lite-posture-smoke-test
+          path: |
+            reports/core_lite/
